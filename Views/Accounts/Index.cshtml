@@ -1,53 +1,62 @@
-﻿@model IEnumerable<Bitirme_Projesi.Models.Account>
-
-@{
-    ViewData["Title"] = "Index";
+﻿@{
+	ViewData["Title"] = "Login";
+	Layout = null;
 }
 
-<h1>Index</h1>
+<html lang="tr">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"] - Alışveriş Listesi Uygulaması</title>
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/css/index.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/Bitirme_Projesi.styles.css" asp-append-version="true" />
+</head>
+<body>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.FirstName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LastName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Password)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PasswordRepeat)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Password)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PasswordRepeat)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Email">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Email">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Email">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="container" id="container">
+	<div class="form-container sign-up-container">
+		<form method="Post" asp-controller="Accounts" asp-action="Create">
+			<h3>Hesap Oluştur</h3>		
+			
+			<input type="text" name="FirstName" placeholder="İsim" required="required" />
+			<input type="text" name="LastName" placeholder="Soyisim" required="required" />
+			<input type="email" name="Email" placeholder="Email" required="required" />
+			<input type="password" name="Password" placeholder="Şifre" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Min 8 karakter büyük küçük harf ve rakam içermelidir" />
+			<input type="password" name="PasswordRepeat" placeholder="Yeniden Sifre" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Min 8 karakter büyük küçük harf ve rakam içermelidir" />
+			<input type="submit" value="Login"/>
+			
+		</form>
+	</div>
+	<div class="form-container sign-in-container">
+		<form method="Post" asp-controller="Accounts" asp-action="Index">
+			<h1>Giriş Yap</h1>			
+			<span>veya hesap oluştur</span>
+			<input type="email" placeholder="Email" name="email"/>
+			<input type="password" placeholder="Password" name="password" />			
+			<button type="submit">Giriş Yap</button>
+			<div><span>Admin Girişi İçin İşaretleyin </span> <input type="checkbox" placeholder="Admin"/></div>
+
+	 </form>
+	</div>
+	<div class="overlay-container">
+		<div class="overlay">
+			<div class="overlay-panel overlay-left">
+				<h1>Hesabınız Var Mı?</h1>
+				<p>Butona tıklayarak giriş yapabilirsiniz</p>
+				<button class="ghost" id="signIn">Giriş Yap</button>
+			</div>
+			<div class="overlay-panel overlay-right">
+				<h1>Merhaba!</h1>
+				<p>Devam etmek için lütfen kayıt olunuz!</p>
+				<button class="ghost" id="signUp">Kayıt Ol</button>
+			</div>
+		</div>
+	</div>
+	</div>
+
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script>
+</body>
+</html>

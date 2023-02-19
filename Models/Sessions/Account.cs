@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Bitirme_Projesi.Models
+namespace Bitirme_Projesi.Models.Sessions
 {
     public class Account
     {
@@ -11,15 +11,15 @@ namespace Bitirme_Projesi.Models
         [Required]
         [Key]
         public string Email { get; set; }
-		[Required] 
+        [Required]
         [MinLength(8)]
-		[RegularExpression("(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,}")]
-		public string Password { get; set; }
-        
-		[Required]
+        [RegularExpression("(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,}")]
+        public string Password { get; set; }
+
+        [Required]
         [MinLength(8)]
-        [RegularExpression("(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,}")]    
-		public string PasswordRepeat { get; set; }   
+        [RegularExpression("(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,}")]
+        public string PasswordRepeat { get; set; }
 
     }
 }
