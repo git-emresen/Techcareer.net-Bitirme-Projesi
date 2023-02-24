@@ -1,15 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Bitirme_Projesi.Data;
-using Bitirme_Projesi.Models.Sessions;
+using Bitirme_Projesi.Entities;
+using Bitirme_Projesi.Models;
+using System.Security.Claims;
+using System.Configuration;
 
 namespace Bitirme_Projesi.Controllers
 {
+    [Authorize]
     public class AccountsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -19,62 +20,75 @@ namespace Bitirme_Projesi.Controllers
             _context = context;
         }
 
-        // GET: Accounts
-        public async Task<IActionResult> Index()
+       
+        [AllowAnonymous]
+        public IActionResult Login()
         {
             //return View(await _context.Account.ToListAsync());
             return View();
         }
 
-
+        [AllowAnonymous]
         [HttpPost]
-        public IActionResult Index(string email, string password)
+        public IActionResult Login(LoginViewModel ViewModel)
         {
-            var checkUser = _context.Account.Select(user => new
+            if (ModelState.IsValid)
             {
-                user.Email,
-                user.Password
-            }).Where(u => u.Email == email && u.Password == password);
+                User user = _context.Users.SingleOrDefault(x => x.Email== ViewModel.Email &&
+                x.Password == ViewModel.Password);
 
-            if (checkUser.Count() != 0)
-            {
-                HttpContext.Session.SetString("username", email);
-                return RedirectToAction("Welcome", "Accounts");
-            }
+                if (user != null)
+              {
+                   
+                List<Claim> claims = new List<Claim>();
+                claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
+                claims.Add(new Claim(ClaimTypes.Name, user.FirstName));
+                claims.Add(new Claim(ClaimTypes.Role, user.Role));
+                    claims.Add(new Claim("FirstName", user.FirstName));
+
+                    ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+                HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+                return RedirectToAction("Index", "Home");
+
+                }
             else
             {
-                ViewBag.Message = "Invalid Login";
-                return View();
+                    ViewBag.Message = "Username or Password is Incorrect"; 
             }
-
-
-
+         }
+            return View(ViewModel);
         }
-
-        public IActionResult Welcome()
+		
+		public IActionResult Profile()
         {
-            ViewBag.Message = "Sucsess Login";
-            ViewBag.Message2 = HttpContext.Session.GetString("username");
+           
             return View();
         }
 
         public IActionResult Logout()
         {
-            HttpContext.Session.Remove("username");
-
-            return RedirectToAction("Index", "Accounts");
+            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction(nameof(Login));
         }
 
+        public IActionResult Error()
+		{
+            ViewBag.ErrorMessage = "Kullanıcı Mevcut!";
+            return View();
+		}
 
-        // GET: Accounts/Details/5
-        public async Task<IActionResult> Details(string id)
+
+		// GET: Accounts/Details/5
+		public async Task<IActionResult> Details(string id)
         {
-            if (id == null || _context.Account == null)
+            if (id == null || _context.Users == null)
             {
                 return NotFound();
             }
 
-            var account = await _context.Account
+            var account = await _context.Users
                 .FirstOrDefaultAsync(m => m.Email == id);
             if (account == null)
             {
@@ -84,26 +98,50 @@ namespace Bitirme_Projesi.Controllers
             return View(account);
         }
 
-        // GET: Accounts/Create
-        public IActionResult Create()
+        [AllowAnonymous]
+        public IActionResult Register()
         {
             return View();
         }
 
-        // POST: Accounts/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [AllowAnonymous]
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("FirstName,LastName,Email,Password,PasswordRepeat")] Account account)
+        public async Task<IActionResult> Register([Bind("FirstName,LastName,Email,Password,PasswordRepeat")] RegisterViewModel ViewModel)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(account);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (_context.Users.Any(x => x.Email== ViewModel.Email))
+                {
+                    ModelState.AddModelError(nameof(ViewModel.Email), "Mail adresi zaten kayıtlı");
+                    return View();
+                }
+                
+                User user = new User()
+                {
+                    FirstName = ViewModel.FirstName,
+                    LastName = ViewModel.LastName, 
+                    Email = ViewModel.Email,
+                    Password= ViewModel.Password,
+                    PasswordRepeat=ViewModel.PasswordRepeat
+                    
+                };
+
+                _context.Users.Add(user);
+                int effectedrows = _context.SaveChanges();
+
+                if (effectedrows == 0)
+                {
+                    ModelState.AddModelError("", "User cannot be added");
+                }
+                else
+                {
+					return RedirectToAction("Index", "Home");
+				}
+
             }
-            return View(account);
+            return View(ViewModel);
+
+
         }
 
     }  

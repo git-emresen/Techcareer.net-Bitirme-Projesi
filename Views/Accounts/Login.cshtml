@@ -1,4 +1,6 @@
-﻿@{
+﻿@model LoginViewModel;
+
+@{	
 	ViewData["Title"] = "Login";
 	Layout = null;
 }
@@ -16,29 +18,31 @@
 
 <div class="container" id="container">
 	<div class="form-container sign-up-container">
-		<form method="Post" asp-controller="Accounts" asp-action="Create">
-			<h3>Hesap Oluştur</h3>		
-			
+		<form method="Post" asp-controller="Accounts" asp-action="Register">
+			<h3>Hesap Oluştur</h3>					
 			<input type="text" name="FirstName" placeholder="İsim" required="required" />
 			<input type="text" name="LastName" placeholder="Soyisim" required="required" />
 			<input type="email" name="Email" placeholder="Email" required="required" />
 			<input type="password" name="Password" placeholder="Şifre" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Min 8 karakter büyük küçük harf ve rakam içermelidir" />
 			<input type="password" name="PasswordRepeat" placeholder="Yeniden Sifre" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Min 8 karakter büyük küçük harf ve rakam içermelidir" />
-			<input type="submit" value="Login"/>
-			
-		</form>
+			<input class="btn-light" type="submit" value="Kaydet"/>
+			<div asp-validation-summary="ModelOnly" class="text-danger small"> </div>
+				@*<div>@ViewBag.KayitMesaji</div>*@
+			</form>
 	</div>
-	<div class="form-container sign-in-container">
-		<form method="Post" asp-controller="Accounts" asp-action="Index">
+	<div id="signInContainer" class="form-container sign-in-container">
+		<form method="Post" asp-controller="Accounts">			
 			<h1>Giriş Yap</h1>			
 			<span>veya hesap oluştur</span>
 			<input type="email" placeholder="Email" name="email"/>
 			<input type="password" placeholder="Password" name="password" />			
 			<button type="submit">Giriş Yap</button>
-			<div><span>Admin Girişi İçin İşaretleyin </span> <input type="checkbox" placeholder="Admin"/></div>
-
-	 </form>
-	</div>
+			@*<div asp-validation-for="email" class="text-danger small"></div>*@
+			<div class="text-danger small" style="">@ViewBag.Message</div>
+	    </form>		
+		
+		
+		</div>
 	<div class="overlay-container">
 		<div class="overlay">
 			<div class="overlay-panel overlay-left">
@@ -49,7 +53,7 @@
 			<div class="overlay-panel overlay-right">
 				<h1>Merhaba!</h1>
 				<p>Devam etmek için lütfen kayıt olunuz!</p>
-				<button class="ghost" id="signUp">Kayıt Ol</button>
+				<button class="ghost" id="signUp">Kayıt Ol</button>				
 			</div>
 		</div>
 	</div>

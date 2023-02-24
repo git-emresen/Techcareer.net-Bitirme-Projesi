@@ -1,9 +1,11 @@
 ﻿using Bitirme_Projesi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace Bitirme_Projesi.Controllers
 {
+	[Authorize]
 	public class HomeController : Controller
 	{
 		private readonly ILogger<HomeController> _logger;
@@ -22,7 +24,13 @@ namespace Bitirme_Projesi.Controllers
 		{
 			return View();
 		}
+		[AllowAnonymous]
+		public IActionResult AccessDenied()
+		{
+			return View();
 
+		}
+		[AllowAnonymous]
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()
 		{
