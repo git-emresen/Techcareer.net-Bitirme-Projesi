@@ -1,7 +1,10 @@
-﻿using Bitirme_Projesi.Models;
+﻿using Bitirme_Projesi.Entities;
+using Bitirme_Projesi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Diagnostics;
+using X.PagedList;
 
 namespace Bitirme_Projesi.Controllers
 {
@@ -9,15 +12,24 @@ namespace Bitirme_Projesi.Controllers
 	public class HomeController : Controller
 	{
 		private readonly ILogger<HomeController> _logger;
-
-		public HomeController(ILogger<HomeController> logger)
+		private ApplicationDbContext _context;
+		public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
 		{
 			_logger = logger;
+			_context = context;
 		}
-
-		public IActionResult Index()
+		public IActionResult Index(int page = 1)
 		{
-			return View();
+			IPagedList<Product> products = _context.Products
+				.Select(p => new Product() {
+					ProductId=p.ProductId,
+					ProductName = p.ProductName,
+					ProductDescription=p.ProductDescription,
+					UnitPrice=p.UnitPrice,
+					Image=p.Image
+				}).ToPagedList(page,8);
+			return View(products);
+          
 		}
 
 		public IActionResult Privacy()

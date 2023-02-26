@@ -1,4 +1,62 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
-<h1>Home Page</h1>
+﻿
+@using Bitirme_Projesi.Entities
+@using X.PagedList;
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Common
+
+@model IPagedList<Product>
+<link rel="stylesheet" href="~/css/PagedList.css" />
+<div class="row">
+	  @foreach (var product in Model)
+    {
+        <div class="col-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6 class="my-0 font-weight-normal">
+                        <label style="font-size: 23px;color: steelblue">@product.ProductName</label>
+                    </h6>
+                </div>
+                <img src="~/@product.Image" alt="Card Image" class="card-img-top" style="height: 300px;" />
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                            <label style="font-size: 20px;color: #a51313"><b>Price : @product.UnitPrice</b></label>
+                        </div>
+                        <a asp-action="Detail" asp-controller="Home" asp-route-id="@product.ProductId" class="btn btn-success pull-right btn-outline-info">Deatils</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+	}
+     @Html.PagedListPager((IPagedList)Model,
+                             page=> Url.Action("Index",new{page}),
+                             new PagedListRenderOptionsBase(){DisplayLinkToFirstPage =PagedListDisplayMode.Always})
+                                                                
+</div> 
+@*
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Sipariş No</th>
+            <th>Sipariş Tarihi</th>
+            <th>Gönderildiği Ülke</th>
+           
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Product item in Model)
+        {
+            <tr>
+                <td>@item.ProductName</td>
+                <td>@item.ProductDescription</td>
+                <td>@item.UnitPrice</td>
+                <td><a asp-action="ProductList" asp-route-id="@item.ProductId" class="btn btn-info">Ürünler</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+         @Html.PagedListPager((IPagedList)Model,
+                             page=> Url.Action("Index",new{page}),
+                             new PagedListRenderOptionsBase(){DisplayLinkToFirstPage =PagedListDisplayMode.Always})
+                                                                
+*@

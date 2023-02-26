@@ -1,0 +1,107 @@
+﻿@{
+    ViewData["Title"] = "Admin";
+   
+}
+@model Bitirme_Projesi.Entities.Product
+
+<br />
+
+<h2 class="text-info">Yeni Ürün Ekle</h2>
+<form asp-controller="Admin" asp-action="Save" method="post" enctype="multipart/form-data" formnovalidate style="padding:0">
+    <div class="p-4 rounded border">
+        <div asp-validation-summary="ModelOnly" class="text-danger">
+        </div>
+        <h3 class="success">@TempData["SuccessMessage"]</h3>
+        <div class="form-group row">
+            <div class="col-2">
+                <label asp-for="ProductName">Ürün Adı</label>
+            </div>
+            <div class="col-5">
+                <input asp-for="ProductName" class="form-control" />
+            </div>
+            <span asp-validation-for="ProductName" class="text-danger"></span>
+        </div>
+        <div class="form-group row">
+            <div class="col-2">
+                <label asp-for="UnitPrice">Birim Fiyatı</label>
+            </div>
+            <div class="col-5">
+                <input asp-for="UnitPrice" class="form-control" />
+            </div>
+            <span asp-validation-for="UnitPrice" class="text-danger"></span>
+        </div>
+        <div class="form-group row">
+            <div class="col-2">
+                <label asp-for="Image">Ürün Resmi</label>
+            </div>
+            <div class="col-5">
+                <input asp-for="Image" class="form-control" type="file" value=""/>
+            </div>
+            @*<span asp-validation-for="Image" class="text-danger"></span>*@
+        </div>
+        <div class="form-group row">
+            <div class="col-2">
+                <label asp-for="UnitsInStock">Stok Miktarı</label>
+            </div>
+            <div class="col-5">
+                <input asp-for="UnitsInStock" class="form-control" />
+            </div>
+            <span asp-validation-for="UnitsInStock" class="text-danger"></span>
+        </div>
+        <div class="form-group row">
+            <div class="col-2">
+                <label asp-for="CategoryId">Kategori</label>
+            </div>
+            <div class="col-5">
+                @*<select asp-for="CategoryId" asp-items="ViewBag.productTypeId" class="form-control">
+                    <option value="none" selected disabled hidden>
+                        Select an Option
+                    </option>
+                </select>*@
+                <select asp-for="CategoryId" asp-items="ViewBag.CategoryId" class="form-control"></select>
+            </div>
+            <span asp-validation-for="CategoryId" class="text-danger"></span>
+        </div>
+        <div class="form-group row">
+            <div class="col-2">
+                <label asp-for="ProductDescription">Ürün Açıklaması</label>
+            </div>
+            <div class="col-5">
+                <input asp-for="ProductDescription" class="form-control" />
+                @*<input asp-for="SpecialTagId" class="form-control" />*@
+            </div>
+            <span asp-validation-for="ProductDescription" class="text-danger"></span>
+        </div>
+       
+        <div class="form-group">
+            <input type="submit" class="btn btn-primary" value="Save"/>
+            <a asp-action="Index" class="btn btn-success">Back to List</a>
+        </div>
+    </div>
+</form>
+
+<div class="p-4 rounded border">
+    <h5 class="text-info">Yeni Kategori Ekle</h5>
+
+    <div>
+        <form method="post" asp-action="AddNewCategory" style="padding:0">
+            <div class="form-group row">
+                <div class="col-2">
+                    <label>Kategori Adı</label>
+                </div>
+                <div class="col-5">
+                    <input name="CategoryName" class="form-control" />
+                </div>
+                <span name="CategoryName" class="text-danger">@TempData["CategoryError"]</span>
+            </div>
+         <input type="submit" value="Kaydet"/>
+        </form>
+    </div>
+</div>
+
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
