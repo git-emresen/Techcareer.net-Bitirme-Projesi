@@ -4,6 +4,7 @@ using Bitirme_Projesi.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bitirme_Projesi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230301110944_sixth")]
+    partial class sixth
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -122,12 +124,28 @@ namespace Bitirme_Projesi.Migrations
                     b.Property<bool?>("IsDone")
                         .HasColumnType("bit");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("MyUserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("MyUserId");
+
                     b.ToTable("UserLists");
+                });
+
+            modelBuilder.Entity("Bitirme_Projesi.Entities.UserList", b =>
+                {
+                    b.HasOne("Bitirme_Projesi.Entities.User", "MyUser")
+                        .WithMany("lists")
+                        .HasForeignKey("MyUserId");
+
+                    b.Navigation("MyUser");
+                });
+
+            modelBuilder.Entity("Bitirme_Projesi.Entities.User", b =>
+                {
+                    b.Navigation("lists");
                 });
 #pragma warning restore 612, 618
         }

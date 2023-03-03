@@ -1,1 +1,80 @@
-﻿<h1>profile</h1>
+﻿
+@model IQueryable<UserList>
+@using Bitirme_Projesi.Entities
+@using System.Security.Claims
+@{
+    ClaimsIdentity identity = User.Identity as ClaimsIdentity;
+    var id=identity.FindFirst("UserId");
+    
+}
+<section >
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col col-lg-9 col-xl-7">
+                <div class="card rounded-3">
+                    <div class="card-body p-4">
+
+                        <h4 class="text-center my-3 pb-3">Alışveriş Listelerim</h4>
+
+                        <form class="row row-cols-lg-auto g-3 justify-content-center align-items-center mb-4 pb-2"  asp-action="AddList">
+
+                            <div class="col-12">
+                                <div class="form-outline">
+                                    <input type="text" name="Description" class="form-control" />   
+                                    <input type="hidden" name="UserId" value="@id.Value"/>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">Ekle</button>
+                            </div>
+                        </form>
+
+                        <table class="table mb-4">
+                            <thead>
+                                <tr>
+                                    <th scope="col">No.</th>
+                                    <th scope="col">Liste Adı</th>
+                                    <th scope="col">Erişim</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if(Model.Count()!=0)
+                                {
+                                   @foreach(var item in Model)
+                                    {
+                                        <form method="post"  >
+                                    <tr>
+                                        <th scope="row">@item.Id</th>
+										<td>@item.Description</td>
+                                        
+                                            @if(item.IsDone==false){
+                                                <td> Açık </td>
+                                            }
+                                            else
+                                            {
+                                                <td>Kapalı</td>
+                                            }
+
+                                        <td>
+                                            <button type="submit" class="btn btn-danger" asp-controller="Accounts" asp-action="RemoveList" asp-route-id="@item.Id">Sil</button>
+                                            <button type="submit" class="btn btn-success ms-1" asp-controller="Cart" asp-action="GoShopping" asp-route-id="@item.Id" >Alışverişe Çık</button>
+                                        </td>
+                                    </tr>
+                                     </form>
+                                    }
+                                }
+                                else
+                                {
+                                    <h4 class="text-center text-warning my-3 pb-3">Listeniz Yok!</h4>
+                                }
+
+                            </tbody>
+                        </table>
+						
+					</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

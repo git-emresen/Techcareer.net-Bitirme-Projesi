@@ -1,0 +1,81 @@
+﻿@model Bitirme_Projesi.Entities.Product
+@using Bitirme_Projesi.Entities
+@{
+    ViewData["Title"] = "Details";   
+}
+
+
+
+<link href="~/css/detail.css" rel="stylesheet" />
+
+<div class="container mt-5 mb-5">
+    <div class="card">
+        <div class="row g-0">
+            <div class="col-md-6 border-end">
+                <div class="d-flex flex-column justify-content-center">
+                    <div class="main_image">
+                        <img src="~/@Model.Image" alt="resim" id="main_product_image" width="350">
+                    </div>
+                    <div class="thumbnail_images">
+                        <ul id="thumbnail">
+                            <li><img onclick="changeImage(this)" src="~/@Model.Image" width="70"></li>
+                            <li><img onclick="changeImage(this)" src="~/@Model.Image" width="70"></li>
+                            <li><img onclick="changeImage(this)" src="~/@Model.Image" width="70"></li>
+                            <li><img onclick="changeImage(this)" src="~/@Model.Image" width="70"></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <form method="post" asp-controller="Cart" asp-action="Add" class="p-3 right-side">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h2>@Model.ProductName</h2>     
+                    </div>
+
+                    <div class="mt-2 pr-3 content">
+                        <p style="font-size:18px; font-style:italic">
+                            @Model.ProductDescription
+                        </p>
+                        <h2>@Model.UnitPrice.ToString("C2")</h2>
+                    </div>
+                    
+                    <div class=" d-flex flex-row align-items-center">                        
+                        <span class="fw-bold me-2">Adet Giriniz:</span>
+                        <input asp-for="UnitsInStock" type="number" name="UnitsInStock" value="1"/>  
+                    </div>
+                        <input type="hidden" asp-for="ProductId"/>
+                        <span class="fw-bold">Renk</span>
+                        <div class="colors">
+                            <select>                               
+                                    <option>Seçiniz</option>                               
+                            </select>
+					    </div>
+                    <div class="mt-5">
+                    </div>                
+
+
+                    <div class="search-option">
+                        @* <i class="fa-thin fa-magnifying-glass"></i>*@
+                        <div class="inputs">
+                            <input type="text" name="note" placeholder="bir not ekle...">
+                        </div>  
+                    </div>
+                    <div class="buttons d-flex flex-row mt-5 gap-3">
+                       @* <button class="btn btn-outline-dark" asp-action="Ekle" asp-controller="Cart">
+                            Listeye Ekle
+                        </button>*@
+                        <button type="submit" class="btn btn-primary" @*asp-controller="Cart" asp-action="Add" asp-route-id="@Model.ProductId"*@>Listeme Ekle</button>
+                        <a asp-action="Index" class="btn btn-success">Geri Dön</a>
+                    </div>
+              </form>
+        </div>
+    </div>
+</div>
+</div>
+
+<script src="~/js/site.js"></script>
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

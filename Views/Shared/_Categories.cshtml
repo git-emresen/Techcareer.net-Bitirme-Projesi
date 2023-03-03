@@ -1,0 +1,8 @@
+﻿<div class="col-3">
+    @await Component.InvokeAsync("Categories")
+
+                    <div class="bg-success mt-3 p-3 text-white">
+        @* <vc:small-cart />*@
+        @await Component.InvokeAsync("SmallCart")
+                   </div>
+ </div>

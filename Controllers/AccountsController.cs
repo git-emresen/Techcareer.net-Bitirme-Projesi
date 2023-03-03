@@ -7,6 +7,11 @@ using Bitirme_Projesi.Entities;
 using Bitirme_Projesi.Models;
 using System.Security.Claims;
 using System.Configuration;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using X.PagedList;
+using Bitirme_Projesi.Infrastructure;
+using System.Drawing.Text;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Bitirme_Projesi.Controllers
 {
@@ -38,13 +43,14 @@ namespace Bitirme_Projesi.Controllers
                 x.Password == ViewModel.Password);
 
                 if (user != null)
-              {
-                   
-                List<Claim> claims = new List<Claim>();
+              {                                     
+
+                  List<Claim> claims = new List<Claim>();
                 claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
                 claims.Add(new Claim(ClaimTypes.Name, user.FirstName));
-                claims.Add(new Claim(ClaimTypes.Role, user.Role));
-                    claims.Add(new Claim("FirstName", user.FirstName));
+                claims.Add(new Claim(ClaimTypes.Role, user.Role));                
+                claims.Add(new Claim("FirstName", user.FirstName));
+                claims.Add(new Claim("UserId", user.Id.ToString()));
 
                     ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
@@ -63,8 +69,20 @@ namespace Bitirme_Projesi.Controllers
 		
 		public IActionResult Profile()
         {
-           
-            return View();
+            ClaimsIdentity identity = User.Identity as ClaimsIdentity;
+            var id = identity.FindFirst("UserId");
+            
+            var lists = _context.UserLists
+                .Select(l => new UserList()
+                {
+                    Id = l.Id,
+                    Description = l.Description,
+                    IsDone = l.IsDone,
+                    UserId = l.UserId,
+
+                })
+                .Where(u => u.UserId ==Convert.ToInt32(id.Value));
+            return View(lists);
         }
 
         public IActionResult Logout()
@@ -144,6 +162,33 @@ namespace Bitirme_Projesi.Controllers
 
         }
 
+        [HttpPost]
+        public IActionResult AddList([Bind("Description","IsDone","UserId")] UserList u)
+        {
+
+            string id = HttpContext.User.FindFirstValue("UserId");
+
+            UserList uList = new UserList()
+            {
+                Description = u.Description,
+                IsDone = false,
+                UserId = u.UserId
+            };
+
+            _context.UserLists.Add(uList);
+            int effectedrows = _context.SaveChanges();
+            return RedirectToAction("Profile", "Accounts");
+        }
+
+        public IActionResult RemoveList(int Id)
+        {
+            var item = _context.UserLists.Single(c => c.Id == Id);
+            _context.UserLists.Remove(item);
+            _context.SaveChanges();
+            return RedirectToAction("Profile", "Accounts");
+           
+
+        }
     }  
        
 }

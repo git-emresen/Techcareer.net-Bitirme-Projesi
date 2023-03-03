@@ -1,0 +1,54 @@
+﻿@model CartViewModel
+
+@{
+    ViewData["Title"] = "Listem";
+}
+
+@if (Model.CartItems.Count > 0)
+{
+    <table class="table">
+        <tr>
+            <th>Ürün</th>
+            <th>Miktar</th>
+            <th></th>
+            <th>Alındı Mı?</th>
+            <th>Fiyat</th>
+            <th>Toplam</th>
+        </tr>
+        @foreach (var item in Model.CartItems)
+        {
+            <tr>
+                <td>@item.ProductName</td>
+                <td>@item.Quantity</td>
+                
+                <td>
+                    <button class="btn btn-primary btn-sm" asp-action="Add" asp-route-id="@item.ProductId" disabled>+</button>
+                    <button class="btn btn-info btn-sm" asp-action="Decrease" asp-route-id="@item.ProductId" disabled>-</button>
+                    <button class="btn btn-danger btn-sm" asp-action="Remove" asp-route-id="@item.ProductId" disabled>Kaldır</button>
+                </td>
+                <td>
+                    <input type="checkbox">
+                </td>
+                <td>@item.Price.ToString("C2")</td>
+                <td>@Model.CartItems.Where(x => x.ProductId == item.ProductId).Sum(x => x.Quantity * x.Price).ToString("C2")</td>
+            </tr>
+        }
+        <tr>
+            <td class="text-right" colspan="4">Genel Toplam: @Model.GrandTotal.ToString("C2")</td>
+        </tr>
+        <tr>
+            <td class="text-right" colspan="4">
+                <button class="btn btn-danger" asp-action="Clear" disabled>Listeyi Temizle</button>
+                <button class="btn btn-primary" href="#">Alışverişi Tamamla</button>
+            </td>
+        </tr>
+    </table>
+
+
+}
+else
+{
+    <h3 class="display-4 text-center">Listeniz boş.</h3>
+}
+
+            <script src="~/js/site.js"></script>

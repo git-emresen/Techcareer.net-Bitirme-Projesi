@@ -4,57 +4,55 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Bitirme_Projesi</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />    
+    <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
+    <link rel="stylesheet" href="~/lib/toastr.js/toastr.min.css"  />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
-    <link href="~/lib/toastr.js/toastr.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/Bitirme_Projesi.styles.css" asp-append-version="true" />
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Ana Sayfa</a>
+                <a class="navbar-brand text-dark fs-2" asp-area="" asp-controller="Home" asp-action="Index">Ana Sayfa</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between fs-5">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        @if (User.Identity.IsAuthenticated)
+                        @await RenderSectionAsync("_Search",required:false)
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("user"))
                         {
-
-                            <li class="nav-item ms-auto">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Accounts" asp-action="Profile">
-                                    <i class="fa-solid fa-user me-2"></i>@*@User.FindFirst("FirstName").Value*@
-                                    @User.Identity.Name
-                                </a>
-                            </li>
-
-
-                            @if (User.IsInRole("admin"))
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">
-                                        <i class="fa-solid fa-lock"></i> Yönetim Paneli
-                                        </a>
-                                </li>
-                            }
-                        
+                        <li class="nav-item ms-auto">                           
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Accounts" asp-action="Profile">
+                                <i class="fa-solid fa-user me-2"></i>@*@User.FindFirst("FirstName").Value*@
+                               @* Hoşgeldin @User.Identity.Name*@
+                               Liste Oluştur
+                            </a>
+                        </li>                         
                              
-                            <li class="nav-item">
+                        <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Accounts" asp-action="Logout">
-                                    <i class="fa-solid fa-right-to-bracket me-2"></i>Logout
+                                    <i class="fa-solid fa-right-to-bracket me-2"></i>Çıkış
                                 </a>
-                            </li>
-						}
-                        </ul>
+                        </li>
+						
+                          }
+                        else if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
+                        {
+                        <li class="nav-item ms-auto">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">
+                                <i class="fa-solid fa-lock"></i> Yönetim Paneli
+                            </a>
+                        </li>
+                         <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Accounts" asp-action="Logout">
+                                    <i class="fa-solid fa-right-to-bracket me-2"></i>Çıkış
+                                </a>
+                        </li>
+                        }
+                     </ul>
 						
                 </div>
             </div>
@@ -62,7 +60,16 @@
     </header>
     <div class="container">
         <main role="main" class="pb-15">
-            @RenderBody()
+            <div class="row">
+              
+                     @await RenderSectionAsync("_Categories",required:false)
+               
+               
+                <div class="col">
+                    <partial name="_NotificationPartial" />
+                    @RenderBody()
+                </div>
+            </div>
         </main>
     </div>
 
