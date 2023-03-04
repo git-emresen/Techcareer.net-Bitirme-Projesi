@@ -8,8 +8,8 @@ namespace Bitirme_Projesi.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "UserLists");
+            //migrationBuilder.DropTable(
+            //    name: "UserLists");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
