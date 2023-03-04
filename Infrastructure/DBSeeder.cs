@@ -52,11 +52,11 @@ namespace Bitirme_Projesi.Infrastructure
         {
             var product = new List<Product>
             {
-                new Product{ProductName="laptop",ProductDescription="yeni model laptop",UnitPrice=11200,UnitsInStock=200,Image="Images/laptop.png"},
-                new Product{ProductName="cep telefonu",ProductDescription="son model cep telefonu",UnitPrice=9000,UnitsInStock=200,Image="Images/telefon.jpg"},
-                new Product{ProductName="tablet",ProductDescription="yüksek çözünürlüklü tablet",UnitPrice=1200,UnitsInStock=200,Image="Images/tablet.png"},
-                new Product{ProductName="mikrodalga",ProductDescription="kaliteli mikrodalga",UnitPrice=2200,UnitsInStock=200,Image="Images/mikrodalya.png"},
-                new Product{ProductName="süpürge",ProductDescription="hızlı ev temizleyici",UnitPrice=6500,UnitsInStock=200,Image="Images/süpürge.jpg"},
+                new Product{ProductName="laptop",CategoryId=1, ProductDescription="yeni model laptop",UnitPrice=11200,UnitsInStock=200,Image="Images/laptop.png"},
+                new Product{ProductName="cep telefonu",CategoryId=2, ProductDescription="son model cep telefonu",UnitPrice=9000,UnitsInStock=200,Image="Images/telefon.jpg"},
+                new Product{ProductName="tablet",CategoryId=3, ProductDescription="yüksek çözünürlüklü tablet",UnitPrice=1200,UnitsInStock=200,Image="Images/tablet.png"},
+                new Product{ProductName="mikrodalga",CategoryId=4, ProductDescription="kaliteli mikrodalga",UnitPrice=2200,UnitsInStock=200,Image="Images/mikrodalya.png"},
+                new Product{ProductName="süpürge",CategoryId=5, ProductDescription="hızlı ev temizleyici",UnitPrice=6500,UnitsInStock=200,Image="Images/süpürge.jpg"},
 
             };
             return product;
