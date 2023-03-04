@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
 #nullable disable
 
@@ -8,6 +9,7 @@ namespace Bitirme_Projesi.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+
             migrationBuilder.AlterColumn<string>(
                 name: "ProductDescription",
                 table: "Product",
@@ -23,6 +25,7 @@ namespace Bitirme_Projesi.Migrations
                 nullable: true,
                 oldClrType: typeof(string),
                 oldType: "nvarchar(max)");
+            
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

@@ -1,8 +1,13 @@
 using Bitirme_Projesi.Entities;
+using Bitirme_Projesi.Infrastructure;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
+
+
 var builder = WebApplication.CreateBuilder(args);
+
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
@@ -28,6 +33,20 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 var app = builder.Build();
+SeedDatabase();
+ void SeedDatabase()
+{
+	using (var scope = app.Services.CreateScope())
+		try
+		{
+			var scopedContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+			DBSeeder.Seed(scopedContext);
+		}
+		catch
+		{
+			throw;
+		}
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
